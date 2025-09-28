@@ -6,6 +6,7 @@ import (
 
 	"github.com/aquasecurity/table"
 	"github.com/google/uuid"
+	"github.com/mergestat/timediff"
 )
 
 type Todo struct {
@@ -47,14 +48,14 @@ func (todos *Todos) list() {
 
 		if todo.Completed {
 			completed = "✅"
-			completedAt = todo.CompletedAt.Format(time.RFC1123)
+			completedAt = timediff.TimeDiff(*todo.CompletedAt)
 		}
 
 		if todo.Deadline != nil {
-			deadline = todo.Deadline.Format(time.RFC1123)
+			deadline = timediff.TimeDiff(*todo.Deadline)
 		}
 
-		table.AddRow(todo.ID.String(), todo.Title, deadline, completed, completedAt, todo.UpdatedAt.Format(time.RFC1123))
+		table.AddRow(todo.ID.String(), todo.Title, deadline, completed, completedAt, timediff.TimeDiff(todo.UpdatedAt))
 	}
 
 	table.Render()
