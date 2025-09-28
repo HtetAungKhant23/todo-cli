@@ -1,8 +1,10 @@
 package main
 
 import (
+	"os"
 	"time"
 
+	"github.com/aquasecurity/table"
 	"github.com/google/uuid"
 )
 
@@ -31,4 +33,29 @@ func (todos *Todos) add(title string, deadline *time.Time) {
 	}
 
 	*todos = append(*todos, todo)
+}
+
+func (todos *Todos) list() {
+	table := table.New(os.Stdout)
+	table.SetRowLines(false)
+	table.SetHeaders("ID", "Title", "Deadline", "Completed", "Completed At", "Created At")
+
+	for _, todo := range *todos {
+		completed := "❎"
+		completedAt := ""
+		deadline := ""
+
+		if todo.Completed {
+			completed = "✅"
+			completedAt = todo.CompletedAt.Format(time.RFC1123)
+		}
+
+		if todo.Deadline != nil {
+			deadline = todo.Deadline.Format(time.RFC1123)
+		}
+
+		table.AddRow(todo.ID.String(), todo.Title, deadline, completed, completedAt, todo.UpdatedAt.Format(time.RFC1123))
+	}
+
+	table.Render()
 }

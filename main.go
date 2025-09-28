@@ -13,6 +13,5 @@ func main() {
 	todos.add("Learn how http work deeply.", &deadline)
 	todos.add("Learn GoLang.", nil)
 
-	fmt.Printf("%+v\n", todos)
-
+	todos.list()
 }
